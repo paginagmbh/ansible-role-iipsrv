@@ -30,7 +30,6 @@
     chdir: "{{ iipsrv_src }}"
     creates: "{{ iipsrv_bin }}"
 
----
 - name: install spawn-fcgi
   apt:
     pkg: "spawn-fcgi"

@@ -7,7 +7,7 @@ Type=forking
 EnvironmentFile=/etc/default/iipsrv
 PIDFile={{ iipsrv_pid }}
 ExecStart=/usr/bin/spawn-fcgi\
-        -u iipsrv -g iipsrv\
+        -u {{ iipsrv_user }}\
         -U www-data -G www-data\
         -s {{ iipsrv_socket }}\
         -F {{ ansible_processor_vcpus }}\

@@ -1,0 +1,18 @@
+[Unit]
+Description=IIP Image Server
+After=network.target
+
+[Service]
+Type=forking
+EnvironmentFile=/etc/default/iipsrv
+PIDFile={{ iipsrv_pid }}
+ExecStart=/usr/bin/spawn-fcgi\
+        -u iipsrv -g iipsrv\
+        -U www-data -G www-data\
+        -s {{ iipsrv_socket }}\
+        -F {{ ansible_processor_vcpus }}\
+        -P {{ iipsrv_pid }}\
+        -- {{ iipsrv_bin }}
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+---
+iipsrv_repo: "https://github.com/ruven/iipsrv.git"
+iipsrv_version: "d3c5a38"
+iipsrv_src: "/usr/local/src/iipsrv-{{ iipsrv_version }}"
+
+iipsrv_bin: "/usr/local/bin/iipsrv"
+iipsrv_socket: "/run/iipsrv.sock"
+iipsrv_pid: "/run/iipsrv.pid"
+
+iipsrv_user: "www-data"
+iipsrv_data: "/var/www/"
+iipsrv_verbosity: "0"
+iipsrv_cache_mb: "0"
+iipsrv_allow_upscaling: "0"
+iipsrv_uri_map: "iiif=>IIIF"

@@ -1,0 +1,56 @@
+---
+- name: install build dependencies
+  apt:
+    pkg: "{{ item }}"
+  with_items:
+    - "git"
+    - "build-essential"
+    - "autoconf"
+    - "libtool"
+    - "pkg-config"
+    - "zlib1g-dev"
+    - "libtiff5-dev"
+    - "libjpeg8-dev"
+    - "libopenjp2-7-dev"
+
+- name: checkout iipsrv sources
+  git:
+    repo: "{{ iipsrv_repo }}"
+    dest: "{{ iipsrv_src }}"
+    version: "{{ iipsrv_version }}"
+    accept_hostkey: True
+
+- name: build iipsrv
+  shell: |
+    ./autogen.sh &&\
+    ./configure --enable-openjpeg &&\
+    make &&\
+    cp {{ iipsrv_src }}/src/iipsrv.fcgi {{ iipsrv_bin }}
+  args:
+    chdir: "{{ iipsrv_src }}"
+    creates: "{{ iipsrv_bin }}"
+
+---
+- name: install spawn-fcgi
+  apt:
+    pkg: "spawn-fcgi"
+
+- name: configure iipsrv
+  template:
+    src: "iipsrv.env.j2"
+    dest: "/etc/default/iipsrv"
+    mode: 0644
+  notify: restart iipsrv service
+
+- name: configure iipsrv service
+  template:
+    src: "iipsrv.service.j2"
+    dest: "/etc/systemd/system/iipsrv.service"
+    mode: 0644
+  notify: restart iipsrv service
+
+- name: enable and start iipsrv service
+  systemd:
+    name: "iipsrv"
+    enabled: yes
+    state: started

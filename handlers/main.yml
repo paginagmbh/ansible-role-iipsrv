@@ -1,0 +1,5 @@
+---
+- name: restart iipsrv service
+  systemd:
+    name: "iipsrv"
+    state: restarted

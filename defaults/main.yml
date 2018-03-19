@@ -8,7 +8,7 @@ iipsrv_socket: "/run/iipsrv.sock"
 iipsrv_pid: "/run/iipsrv.pid"
 
 iipsrv_user: "www-data"
-iipsrv_data: "/var/www/"
+iipsrv_data: "/var/www/iiif"
 iipsrv_verbosity: "0"
 iipsrv_cache_mb: "0"
 iipsrv_allow_upscaling: "0"

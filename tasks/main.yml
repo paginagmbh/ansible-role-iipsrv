@@ -23,7 +23,7 @@
 - name: build iipsrv
   shell: |
     ./autogen.sh &&\
-    ./configure --enable-openjpeg &&\
+    ./configure {{ iipsrv_build_config }} &&\
     make &&\
     cp {{ iipsrv_src }}/src/iipsrv.fcgi {{ iipsrv_bin }}
   args:

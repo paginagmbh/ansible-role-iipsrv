@@ -1,2 +1,20 @@
 ---
+galaxy_info:
+  role_name: iipsrv
+  author: paginagmbh
+  description: IIPImage - High Resolution Streaming Image Server
+  company: Pagina GmbH
+  min_ansible_version: 2.4
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - "xenial"
+        - "bionic"
+
+  galaxy_tags:
+    - web
+    - iiif
+    - image
+    - server
 dependencies: []

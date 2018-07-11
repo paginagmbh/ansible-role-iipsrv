@@ -2,6 +2,7 @@
 iipsrv_repo: "https://github.com/ruven/iipsrv.git"
 iipsrv_version: "d3c5a38"
 iipsrv_src: "/usr/local/src/iipsrv-{{ iipsrv_version }}"
+iipsrv_build_config: "--enable-openjpeg"
 
 iipsrv_bin: "/usr/local/bin/iipsrv"
 iipsrv_socket: "/run/iipsrv.sock"

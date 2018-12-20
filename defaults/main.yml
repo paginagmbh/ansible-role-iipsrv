@@ -1,4 +1,22 @@
 ---
+iipsrv_build_deps:
+  - "git"
+  - "build-essential"
+  - "autoconf"
+  - "automake"
+  - "libtool"
+  - "pkg-config"
+  - "zlib1g-dev"
+  - "libtiff5-dev"
+  - "libjpeg8-dev"
+  - "libopenjp2-7-dev"
+
+iipsrv_runtime_deps:
+  - "libtiff5"
+  - "libjpeg8"
+  - "libopenjp2-7"
+  - "spawn-fcgi"
+
 iipsrv_repo: "https://github.com/ruven/iipsrv.git"
 iipsrv_version: "d3c5a38"
 iipsrv_src: "/usr/local/src/iipsrv-{{ iipsrv_version }}"

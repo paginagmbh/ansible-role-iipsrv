@@ -1,39 +1,25 @@
 ---
-- name: install build dependencies
+- name: Check if iipsrv has been installed already
+  stat:
+    path: "{{ iipsrv_bin }}"
+  register: iipsrv_bin_status
+
+- name: Build iipsrv if not installed
+  command: /bin/true
+  changed_when: iipsrv_bin_status.stat.isdir is not defined
+  notify:
+    - install build dependencies
+    - checkout iipsrv sources
+    - build iipsrv
+    - remove build dir
+    - remove build dependencies
+
+- name: Ensure iipsrv is installed
+  meta: flush_handlers
+
+- name: install runtime dependencies
   apt:
-    pkg: "{{ item }}"
-  with_items:
-    - "git"
-    - "build-essential"
-    - "autoconf"
-    - "automake"
-    - "libtool"
-    - "pkg-config"
-    - "zlib1g-dev"
-    - "libtiff5-dev"
-    - "libjpeg8-dev"
-    - "libopenjp2-7-dev"
-
-- name: checkout iipsrv sources
-  git:
-    repo: "{{ iipsrv_repo }}"
-    dest: "{{ iipsrv_src }}"
-    version: "{{ iipsrv_version }}"
-    accept_hostkey: True
-
-- name: build iipsrv
-  shell: |
-    ./autogen.sh &&\
-    ./configure {{ iipsrv_build_config }} &&\
-    make &&\
-    cp {{ iipsrv_src }}/src/iipsrv.fcgi {{ iipsrv_bin }}
-  args:
-    chdir: "{{ iipsrv_src }}"
-    creates: "{{ iipsrv_bin }}"
-
-- name: install spawn-fcgi
-  apt:
-    pkg: "spawn-fcgi"
+    pkg: "{{ iipsrv_runtime_deps }}"
 
 - name: configure iipsrv
   template:
@@ -47,10 +33,12 @@
     src: "iipsrv.service.j2"
     dest: "/etc/systemd/system/iipsrv.service"
     mode: 0644
+  when: ansible_connection != 'docker'
   notify: restart iipsrv service
 
 - name: enable and start iipsrv service
   systemd:
     name: "iipsrv"
-    enabled: yes
+    enabled: true
     state: started
+  when: ansible_connection != 'docker'

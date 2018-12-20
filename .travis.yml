@@ -1,24 +1,17 @@
 ---
+language: python
 services: docker
 
 env:
-  - distro: ubuntu1604
-  - distro: ubuntu1804
+  matrix:
+    - platform_image: ubuntu:18.04
+    - platform_image: ubuntu:16.04
+
+install:
+  - pip install molecule docker
 
 script:
-  # Configure test script so we can run extra tests after playbook is run.
-  - export container_id=$(date +%s)
-  - export cleanup=false
-
-  # Download test shim.
-  - wget -O ${PWD}/tests/test.sh https://gist.githubusercontent.com/geerlingguy/73ef1e5ee45d8694570f334be385e181/raw/
-  - chmod +x ${PWD}/tests/test.sh
-
-  # Run tests.
-  - ${PWD}/tests/test.sh
-
-  # Check Fuseki status.
-  - 'docker exec ${container_id} systemctl status iipsrv.service'
+  - molecule test
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

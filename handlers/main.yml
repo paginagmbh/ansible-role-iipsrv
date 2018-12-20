@@ -1,5 +1,37 @@
 ---
+- name: install build dependencies
+  apt:
+    pkg: "{{ iipsrv_build_deps }}"
+
+- name: checkout iipsrv sources
+  git:
+    repo: "{{ iipsrv_repo }}"
+    dest: "{{ iipsrv_src }}"
+    version: "{{ iipsrv_version }}"
+    accept_hostkey: true
+
+- name: build iipsrv
+  shell: |
+    ./autogen.sh &&\
+    ./configure {{ iipsrv_build_config }} &&\
+    make &&\
+    cp {{ iipsrv_src }}/src/iipsrv.fcgi {{ iipsrv_bin }}
+  args:
+    chdir: "{{ iipsrv_src }}"
+    creates: "{{ iipsrv_bin }}"
+
+- name: remove build dir
+  file:
+    path: "{{ iipsrv_src }}"
+    state: absent
+
+- name: remove build dependencies
+  apt:
+    pkg: "{{ iipsrv_build_deps }}"
+    state: absent
+
 - name: restart iipsrv service
   systemd:
     name: "iipsrv"
     state: restarted
+  when: ansible_connection != 'docker'
